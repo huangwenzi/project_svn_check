@@ -1,0 +1,20 @@
+{
+    "svnurl" : ""    
+    , "outpath" : "./test"
+    , "username" : ""
+    , "password" : ""
+
+    , "check_sh" : "ls"
+    , "check_cool" : 10
+    , "check_sh_err_ret" : "编译失败"
+    , "check_sh_err_cool" : 60
+    , "check_sh_input" : "\r\n"
+    , "check_sh_input_count" : 1
+    , "check_sh_show_time" : 60
+
+    , "init_check" : true
+    , "doc" : "svnurl:svn的路径, outpath:检出到的目标路径, username:用户名, password:密码"
+    , "doc1" : "check_sh:检查执行的命令, check_cool:检查间隔, check_sh_err_ret:返回包含就是检查失败, check_sh_ere_cool:失败后间隔多久再检查"
+    , "doc2" : "应付pause check_sh_input:检查命令是需要输入, check_sh_input_count:输入多少次, check_sh_show_time:弹窗展示时间"
+    , "doc3" : "init_check: 是否执行初次检查"
+}
