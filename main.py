@@ -4,6 +4,7 @@ import pysvn
 import time
 import json
 import threading
+import chardet
 # from win10toast import ToastNotifier
 # toaster = ToastNotifier()
 from plyer import notification
@@ -28,21 +29,42 @@ else:
 
 # 检查函数
 def check_fun():
-    global_data["check_status"] = True
-    res1=subprocess.Popen(cfg["check_sh"],shell=True,stdout=subprocess.PIPE,stdin=subprocess.PIPE,stderr=subprocess.PIPE)
-    for item in range(cfg["check_sh_input_count"]):
-        # str需要转字节码
-        res1.stdin.write(cfg["check_sh_input"].encode("utf-8"))  # send the CR/LF for pause
-    res1.stdin.close()
     # 读取返回
-    res_str = res1.stdout.read().decode(encoding="utf8", errors="ignore")
-    global_data["check_status"] = False
+    res_str = do_cfg_sh(cfg["check_sh"])
     if res_str.find(cfg["check_sh_err_ret"]) > 0:
         print(res_str)
-        client.print_win("check", "have err")
-        print("\n\n")
-        return False
+        
+        # 是否有二次补救
+        if cfg["check_sh_1"] != "":
+            res_str = do_cfg_sh(cfg["check_sh_1"])
+            if res_str.find(cfg["check_sh_err_ret"]) > 0:
+                client.print_win("check", "have err")
+                print("\n\n")
+                return False
+        else:
+            return False
     return True
+
+# 执行配置脚本
+def do_cfg_sh(sh_str):
+    global_data["check_status"] = True
+    # res1=subprocess.Popen([sh_str],stdout=subprocess.PIPE,stdin=subprocess.PIPE,stderr=subprocess.PIPE)
+    # res_str = res1.stdout.read().decode(encoding="utf8", errors="ignore")
+    res1=subprocess.Popen(sh_str,shell=True,stdout=subprocess.PIPE,stdin=subprocess.PIPE,stderr=subprocess.PIPE,encoding=cfg["out_encoding"], errors="ignore")
+    for item in range(cfg["check_sh_input_count"]):
+        # str需要转字节码
+        # res1.stdin.write(cfg["check_sh_input"].encode("utf-8"))  # send the CR/LF for pause
+        res1.stdin.write(cfg["check_sh_input"])
+    ret_list = res1.communicate()
+    res_str = ""
+    for item in ret_list:
+        if isinstance(item, str):
+            res_str += item
+    
+    res1.stdin.close()
+    global_data["check_status"] = False
+    # 读取返回
+    return res_str
 
 # 检查函数
 def check_rev():
