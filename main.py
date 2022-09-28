@@ -1,15 +1,13 @@
-import os
 import subprocess
-import pysvn
 import time
 import json
 import threading
-import chardet
 # from win10toast import ToastNotifier
 # toaster = ToastNotifier()
-from plyer import notification
 import svn_client
 import git_client
+
+print("版本 1")
 
 cfg = {}    # 配置
 global_data = {
@@ -76,7 +74,8 @@ def check_rev():
         # 检查更新
         new_rev = client.update()
         if new_rev != client.now_rev:
-            print("do_check new_rev:%s, now_rev:%s"%(new_rev, client.now_rev))
+            time_str = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+            print("do_check new_rev:%s, now_rev:%s, time:%s"%(new_rev, client.now_rev, time_str))
             if check_fun():
                 client.now_rev = new_rev
                 print("check ok\n")

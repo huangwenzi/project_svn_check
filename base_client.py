@@ -1,4 +1,3 @@
-from plyer import notification
 import win32api,win32con
 
 
@@ -17,4 +16,4 @@ class BaseClient(object):
         # notification.notify(title=title,
         #                 message=notic,
         #                 timeout=self.cfg["check_sh_show_time"])
-        win32api.MessageBox(None, notic, "提醒：", win32con.MB_TOPMOST)
+        win32api.MessageBox(None, notic, title, win32con.MB_TOPMOST)
